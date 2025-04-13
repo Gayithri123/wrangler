@@ -22,6 +22,7 @@ import io.cdap.wrangler.api.SourceInfo;
 import io.cdap.wrangler.api.Triplet;
 import io.cdap.wrangler.api.parser.Bool;
 import io.cdap.wrangler.api.parser.BoolList;
+import io.cdap.wrangler.api.parser.ByteSize;
 import io.cdap.wrangler.api.parser.ColumnName;
 import io.cdap.wrangler.api.parser.ColumnNameList;
 import io.cdap.wrangler.api.parser.DirectiveName;
@@ -33,6 +34,7 @@ import io.cdap.wrangler.api.parser.Properties;
 import io.cdap.wrangler.api.parser.Ranges;
 import io.cdap.wrangler.api.parser.Text;
 import io.cdap.wrangler.api.parser.TextList;
+import io.cdap.wrangler.api.parser.TimeDuration;
 import io.cdap.wrangler.api.parser.Token;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.Interval;
@@ -326,4 +328,33 @@ public final class RecipeVisitor extends DirectivesBaseVisitor<RecipeSymbol.Buil
     int column = ctx.getStart().getCharPositionInLine();
     return new SourceInfo(lineno, column, text);
   }
+
+    /**
+   * Processes a byte size token encountered during parsing of the directive grammar.
+   * Extracts the raw text value (e.g., "10KB") from the ANTLR parser context, converts it into
+   * a {@link ByteSize} token, and adds it to the {@link RecipeSymbol.Builder}.
+   *
+   * @param ctx The ANTLR parser context containing the byte size token (e.g., "10KB").
+   * @return The updated {@link RecipeSymbol.Builder} with the parsed byte size token added.
+   */
+  @Override
+  public RecipeSymbol.Builder visitByteSize(DirectivesParser.ByteSizeContext ctx) {
+    builder.addToken(new ByteSize(ctx.getText()));
+    return builder;
+  }
+
+  /**
+   * Processes a time duration token encountered during parsing of the directive grammar.
+   * Extracts the raw text value (e.g., "150ms") from the ANTLR parser context, converts it into
+   * a {@link TimeDuration} token, and adds it to the {@link RecipeSymbol.Builder}.
+   *
+   * @param ctx The ANTLR parser context containing the time duration token (e.g., "150ms").
+   * @return The updated {@link RecipeSymbol.Builder} with the parsed time duration token added.
+   */
+  @Override
+  public RecipeSymbol.Builder visitTimeDuration(DirectivesParser.TimeDurationContext ctx) {
+    builder.addToken(new TimeDuration(ctx.getText()));
+    return builder;
+  }
+
 }

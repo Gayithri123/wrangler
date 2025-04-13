@@ -140,7 +140,7 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | byteSize | timeDuration 
  ;
 
 ecommand
@@ -215,7 +215,8 @@ StartsWith : '=^';
 NotStartsWith : '!^';
 EndsWith : '=$';
 NotEndsWith : '!$';
-PlusEqual : '+=';
+PlusEqual : '+='
+;
 SubEqual : '-=';
 MulEqual : '*=';
 DivEqual : '/=';
@@ -255,6 +256,17 @@ Bool
 
 Number
  : Int ('.' Digit*)?
+ ;
+
+byteSize : BYTE_SIZE ;
+timeDuration : TIME_DURATION ;
+
+fragment BYTE_UNIT
+ : [KkMmGgTt][Bb]
+ ;
+
+fragment TIME_UNIT
+ : 'ms' | 's' | 'm' | 'h'
  ;
 
 Identifier
